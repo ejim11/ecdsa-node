@@ -1,7 +1,10 @@
 import { useState } from "react";
 import server from "./server";
+import addressDb from "./addressDb.json";
+import { signMessage } from "./signMessage";
+import { toHex, utf8ToBytes } from "ethereum-cryptography/utils";
 
-function Transfer({ address, setBalance }) {
+function Transfer({ address, setBalance, signature, setSignature }) {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
 
@@ -23,6 +26,19 @@ function Transfer({ address, setBalance }) {
       alert(ex.response.data.message);
     }
   }
+
+  const signHandler = async () => {
+    const message = {
+      sender: address,
+      recipient,
+      sendAmount,
+    };
+    const privateKey = addressDb[address].privateKey;
+
+    const signature = await signMessage(JSON.stringify(message), privateKey);
+
+    setSignature(toHex(utf8ToBytes(signature.toString())));
+  };
 
   return (
     <form className="container transfer" onSubmit={transfer}>
@@ -46,7 +62,19 @@ function Transfer({ address, setBalance }) {
         ></input>
       </label>
 
-      <input type="submit" className="button" value="Transfer" />
+      <p>Signature Hash: {signature}</p>
+      <div>
+        {!signature ? (
+          <div className="button sign-btn" onClick={signHandler}>
+            Sign
+          </div>
+        ) : (
+          <p className="button sign-btn">Signed</p>
+        )}
+        <button type="submit" className="button" disabled={!signature}>
+          Transfer
+        </button>
+      </div>
     </form>
   );
 }

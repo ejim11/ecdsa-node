@@ -1,0 +1,14 @@
+{
+  "d99752a608fe83d9c12f8ab5f8e687a9025f216d": {
+    "amount": 88,
+    "privateKey": "04021333b9e80f195042d4b4d974382e5db9b9a7e40eb4bcfa139bfd8f2c1867"
+  },
+  "9fdd4cc01c5e3a9995c35e82d8c732b4a4bbddb5": {
+    "amount": 71,
+    "privateKey": "6f5281fb578d2a4d9383159b5cd967e3efafc7258f0c2731192f739440a81a81"
+  },
+  "98728c3f4f8a87250b3325ebb32b7765725640b0": {
+    "amount": 81,
+    "privateKey": "dd8111bf61ebbb7a8fa7116ebe281f879c4e50560dd95da4c1bc073036c3967a"
+  }
+}

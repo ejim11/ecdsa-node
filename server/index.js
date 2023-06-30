@@ -2,24 +2,25 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = 3042;
+const fs = require("fs");
 
 app.use(cors());
 app.use(express.json());
 
-const balances = {
-  "0x1": 100,
-  "0x2": 50,
-  "0x3": 75,
-};
+let balances = JSON.parse(
+  fs.readFileSync(`${__dirname}/addressDb.json`, "utf-8")
+);
+
+console.log(balances);
 
 app.get("/balance/:address", (req, res) => {
   const { address } = req.params;
-  const balance = balances[address] || 0;
+  const balance = balances[address].amount || 0;
   res.send({ balance });
 });
 
 app.post("/send", (req, res) => {
-  const { sender, recipient, amount } = req.body;
+  const { sender, recipient, amount, signature } = req.body;
 
   setInitialBalance(sender);
   setInitialBalance(recipient);
@@ -27,9 +28,9 @@ app.post("/send", (req, res) => {
   if (balances[sender] < amount) {
     res.status(400).send({ message: "Not enough funds!" });
   } else {
-    balances[sender] -= amount;
-    balances[recipient] += amount;
-    res.send({ balance: balances[sender] });
+    balances[sender].amount -= amount;
+    balances[recipient].amount += amount;
+    res.send({ balance: balances[sender].amount });
   }
 });
 
